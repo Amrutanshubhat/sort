@@ -15,7 +15,8 @@
  * */
 
 
-void merge(void* arr, size_t size, int l, int m, int r, bool (*cmp)(const void*, const void*)) {
+static void 
+merge(void* arr, size_t size, int l, int m, int r, bool (*cmp)(const void*, const void*)) {
 	int a=l, b=m+1;
 	char* temp_arr = alloca((r-l+1)*size);
 	int temp_idx = 0;
@@ -43,7 +44,8 @@ void merge(void* arr, size_t size, int l, int m, int r, bool (*cmp)(const void*,
 	}
 }
 
-void mergesort_recursion(void* arr, size_t size, int l, int r, bool (*cmp)(const void*, const void*)) {
+static void 
+mergesort_recursion(void* arr, size_t size, int l, int r, bool (*cmp)(const void*, const void*)) {
 	if (l>=r) return;
 	int mid = (l+r)/2;
 	mergesort_recursion(arr, size, l, mid, cmp);
@@ -51,6 +53,6 @@ void mergesort_recursion(void* arr, size_t size, int l, int r, bool (*cmp)(const
 	merge(arr, size, l, mid, r, cmp);
 }
 
-void mergesort(void* arr, size_t size, int n, bool (*cmp)(const void*, const void*)) {
+void merge_sort(void* arr, size_t size, int n, bool (*cmp)(const void*, const void*)) {
 	mergesort_recursion(arr, size, 0, n-1, cmp);
 }

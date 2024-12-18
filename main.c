@@ -63,7 +63,7 @@ void test_mergesort(const float* arr, size_t n) {
 	memcpy(temp_arr, arr, n*sizeof(*arr));
 
 	clock_t start = clock();
-	mergesort(temp_arr, sizeof(*arr), n, &cmp);
+	merge_sort(temp_arr, sizeof(*arr), n, &cmp);
 	clock_t end = clock();
 
 	print_result(end-start, is_sorted(temp_arr, n), "MERGE SORT");
