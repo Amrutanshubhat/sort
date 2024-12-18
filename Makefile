@@ -1,6 +1,8 @@
-objects 	= main.o insertion.o quicksort.o mergesort.o
+src_files	= main.c $(wildcard src/*.c)
+objects 	= $(src_files:.c=.o)
 target		= out
-cflags 		= clang -std=c2x -Wall -g -O0 -D_GNU_SOURCE
+cflags 		= clang -std=c2x -Wall -g -O0 -D_GNU_SOURCE 
+includes	= -I./include
 
 .PHONY: clean
 
