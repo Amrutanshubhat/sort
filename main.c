@@ -9,10 +9,10 @@ int success = 0;
 int fail = 0;
 
 bool cmp(const void* x, const void* y) {
-	return *(const int*)x < *(const int*)y;
+	return *(const float*)x < *(const float*)y;
 }
 
-bool is_sorted(int* arr, int size) {
+bool is_sorted(float* arr, int size) {
 	for (int i=0; i<size-1; i++) {
 		if (arr[i] != arr[i+1] && !cmp(&arr[i], &arr[i+1])) {
 			return 0;
@@ -33,8 +33,8 @@ void print_result(const double clock_time, const bool accuracy, const char* algo
 	}
 }
 
-void test_insertion_sort(const int* arr, size_t n) {
-	int* temp_arr = malloc(sizeof(*arr)*n);
+void test_insertion_sort(const float* arr, size_t n) {
+	float* temp_arr = malloc(sizeof(*arr)*n);
 	memcpy(temp_arr, arr, n*sizeof(*arr));
 
 	clock_t start = clock();
@@ -45,8 +45,8 @@ void test_insertion_sort(const int* arr, size_t n) {
 	free(temp_arr);
 }
 
-void test_quicksort(const int* arr, size_t n) {
-	int* temp_arr = malloc(sizeof(*arr)*n);
+void test_quicksort(const float* arr, size_t n) {
+	float* temp_arr = malloc(sizeof(*arr)*n);
 	memcpy(temp_arr, arr, n*sizeof(*arr));
 
 	clock_t start = clock();
@@ -58,8 +58,8 @@ void test_quicksort(const int* arr, size_t n) {
 
 }
 
-void test_mergesort(const int* arr, size_t n) {
-	int* temp_arr = malloc(sizeof(*arr)*n);
+void test_mergesort(const float* arr, size_t n) {
+	float* temp_arr = malloc(sizeof(*arr)*n);
 	memcpy(temp_arr, arr, n*sizeof(*arr));
 
 	clock_t start = clock();
@@ -72,13 +72,13 @@ void test_mergesort(const int* arr, size_t n) {
 }
 
 int main() {
-	FILE* f = fopen("test_data/int_1000.txt", "r");
+	FILE* f = fopen("test_data/float_1000.txt", "r");
 	if (f==NULL) {
 		printf("File open failed\n");
 	}
-	int n;
-	array(int, arr);
-	while(fscanf(f, "%d,", &n) == 1) {
+	float n;
+	array(float, arr);
+	while(fscanf(f, "%f ", &n) == 1) {
 		array_push(arr, n);
 	}
 	printf("Totoal Array Size: %ld\n", arr.size);
