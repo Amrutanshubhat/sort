@@ -9,12 +9,14 @@ int success = 0;
 int fail = 0;
 
 bool cmp(const void* x, const void* y) {
-	return *(const float*)x < *(const float*)y;
+	return *(const int*)x < *(const int*)y;
 }
 
-bool is_sorted(float* arr, int size) {
-	for (int i=0; i<size-1; i++) {
-		if (arr[i] != arr[i+1] && !cmp(&arr[i], &arr[i+1])) {
+bool is_sorted(array* arr) {
+	for (int i=0; i<arr->n-1; i++) {
+		const char* x = array_get(arr, i);
+		const char* y = array_get(arr, i+1);
+		if ((strncmp(x, y, arr->_memsize) != 0) && !cmp((const void*)x, (const void*)y)) {
 			return 0;
 		}
 	}
@@ -33,60 +35,56 @@ void print_result(const double clock_time, const bool accuracy, const char* algo
 	}
 }
 
-void test_insertion_sort(const float* arr, size_t n) {
-	float* temp_arr = malloc(sizeof(*arr)*n);
-	memcpy(temp_arr, arr, n*sizeof(*arr));
+void test_insertion_sort(const array* arr) {
+	array* temp_arr = array_copy(arr);
 
 	clock_t start = clock();
-	insertion_sort(temp_arr, sizeof(*arr),  n, cmp);
+	insertion_sort(temp_arr->p, temp_arr->_memsize,  temp_arr->n, cmp);
 	clock_t end = clock();
 
-	print_result(end-start, is_sorted(temp_arr, n), "INSERTION SORT");
-	free(temp_arr);
+	print_result(end-start, is_sorted(temp_arr), "INSERTION SORT");
+	array_free(temp_arr);
 }
 
-void test_quicksort(const float* arr, size_t n) {
-	float* temp_arr = malloc(sizeof(*arr)*n);
-	memcpy(temp_arr, arr, n*sizeof(*arr));
+void test_quicksort(const array* arr) {
+	array* temp_arr = array_copy(arr);
 
 	clock_t start = clock();
-	quick_sort(temp_arr, sizeof(*arr), n, &cmp);
+	quick_sort(temp_arr->p, temp_arr->_memsize,  temp_arr->n, cmp);
 	clock_t end = clock();
 
-	print_result(end-start, is_sorted(temp_arr, n), "QUICK SORT");
-	free(temp_arr);
+	print_result(end-start, is_sorted(temp_arr), "QUICK SORT");
+	array_free(temp_arr);
 
 }
 
-void test_mergesort(const float* arr, size_t n) {
-	float* temp_arr = malloc(sizeof(*arr)*n);
-	memcpy(temp_arr, arr, n*sizeof(*arr));
+void test_mergesort(const array* arr) {
+	array* temp_arr = array_copy(arr);
 
 	clock_t start = clock();
-	merge_sort(temp_arr, sizeof(*arr), n, &cmp);
+	merge_sort(temp_arr->p, temp_arr->_memsize,  temp_arr->n, cmp);
 	clock_t end = clock();
 
-	print_result(end-start, is_sorted(temp_arr, n), "MERGE SORT");
-	free(temp_arr);
+	print_result(end-start, is_sorted(temp_arr), "MERGE SORT");
+	array_free(temp_arr);
 
 }
 
 int main() {
-	FILE* f = fopen("test_data/float_1000.txt", "r");
+	FILE* f = fopen("test_data/int_1000.txt", "r");
 	if (f==NULL) {
 		printf("File open failed\n");
 	}
-	float n;
-	array(float, arr);
-	while(fscanf(f, "%f ", &n) == 1) {
-		array_push(arr, n);
+	int n;
+	array* arr = new_array(sizeof(int));
+	while(fscanf(f, "%d ", &n) == 1) {
+		array_push(arr, &n);
 	}
-	printf("Totoal Array Size: %ld\n", arr.size);
-	test_insertion_sort(arr.p, arr.size);
-	test_quicksort(arr.p, arr.size);
-	test_mergesort(arr.p, arr.size);
+	printf("Totoal Array Size: %ld\n", array_size(arr));
+	test_insertion_sort(arr);
+	test_quicksort(arr);
+	test_mergesort(arr);
+	array_free(arr);
 	printf("\nSuccess: %d\tFailure: %d\n", success, fail);
 	fclose(f);
-	if (arr.capacity > 0)
-		free(arr.p);
 }
