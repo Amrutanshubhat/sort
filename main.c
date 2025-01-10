@@ -39,7 +39,7 @@ void test_insertion_sort(const array* arr) {
 	array* temp_arr = array_copy(arr);
 
 	clock_t start = clock();
-	insertion_sort(temp_arr->p, temp_arr->_memsize,  temp_arr->n, cmp);
+	insertion_sort(temp_arr->p, temp_arr->_memsize*temp_arr->n,  temp_arr->_memsize, cmp);
 	clock_t end = clock();
 
 	print_result(end-start, is_sorted(temp_arr), "INSERTION SORT");
@@ -50,7 +50,7 @@ void test_quicksort(const array* arr) {
 	array* temp_arr = array_copy(arr);
 
 	clock_t start = clock();
-	quick_sort(temp_arr->p, temp_arr->_memsize,  temp_arr->n, cmp);
+	quick_sort(temp_arr->p, temp_arr->_memsize*temp_arr->n,  temp_arr->_memsize, cmp);
 	clock_t end = clock();
 
 	print_result(end-start, is_sorted(temp_arr), "QUICK SORT");
@@ -62,7 +62,7 @@ void test_mergesort(const array* arr) {
 	array* temp_arr = array_copy(arr);
 
 	clock_t start = clock();
-	merge_sort(temp_arr->p, temp_arr->_memsize,  temp_arr->n, cmp);
+	merge_sort(temp_arr->p, temp_arr->_memsize*temp_arr->n,  temp_arr->_memsize, cmp);
 	clock_t end = clock();
 
 	print_result(end-start, is_sorted(temp_arr), "MERGE SORT");

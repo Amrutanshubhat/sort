@@ -22,6 +22,6 @@ void partition(void* arr, size_t size, int l, int r, bool (*cmp)(const void*, co
 	partition(arr, size, last+1, r, cmp);
 }
 
-void quick_sort(void* arr, size_t size, int tot_elements, bool (*cmp)(const void*, const void*)) {
-	partition(arr, size, 0, tot_elements-1, cmp);
+void quick_sort(void* arr, size_t nsize, size_t size, bool (*cmp)(const void*, const void*)) {
+	partition(arr, size, 0, nsize/size-1, cmp);
 }

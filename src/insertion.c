@@ -11,9 +11,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-void insertion_sort(void* arr, size_t size, int tot_elements, bool (*cmp)(const void*, const void*)) {
-	if (tot_elements < 2) return;
-	for (int i=1; i<tot_elements; i++) {
+void insertion_sort(void* arr, size_t nsize, size_t size, bool (*cmp)(const void*, const void*)) {
+	int n = nsize/size;
+	if (n < 2) return;
+	for (int i=1; i<n; i++) {
 		int j = i-1;
 		char key[size];
 		memcpy(key, arr+size*i, size);

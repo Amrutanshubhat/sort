@@ -53,6 +53,6 @@ mergesort_recursion(void* arr, size_t size, int l, int r, bool (*cmp)(const void
 	merge(arr, size, l, mid, r, cmp);
 }
 
-void merge_sort(void* arr, size_t size, int n, bool (*cmp)(const void*, const void*)) {
-	mergesort_recursion(arr, size, 0, n-1, cmp);
+void merge_sort(void* arr, size_t nsize, size_t size, bool (*cmp)(const void*, const void*)) {
+	mergesort_recursion(arr, size, 0, nsize/size-1, cmp);
 }
