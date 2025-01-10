@@ -1,9 +1,11 @@
 #ifndef _MYLIB
 #define _MYLIB
 
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 
 typedef struct {
 	void* p;
@@ -26,7 +28,7 @@ _create_array(size_t size, size_t cnt) {
 	arr->capacity = cnt == 0 ? 256 : cnt;
 	arr->_memsize = size;
 	arr->p = (void*) calloc(arr->capacity, arr->_memsize);
-	if (!arr->p) exit(69);
+	assert(arr->p != nullptr);
 	return arr;
 }
 
@@ -48,7 +50,7 @@ array_push(array *arr, void* val) {
 			exit(69);
 		}
 	}
-	memcpy(arr->p+arr->n*arr->_memsize, val, arr->_memsize);
+	memcpy((uint8_t*)arr->p+arr->n*arr->_memsize, val, arr->_memsize);
 	arr->n++; 
 }
 
@@ -56,19 +58,19 @@ static const void*
 array_pop(array* arr) {
 	if (arr->n > 0) { 
 		arr->n--; 
-		return (const void*)(const void*)(arr->p+arr->_memsize*arr->n);
+		return (const void*)((uint8_t*)arr->p+arr->_memsize*arr->n);
 	}
 	return nullptr;
 }
 
 static const void*
 array_get(const array* arr, size_t pos) {
-	return (const void*)(arr->p+arr->_memsize*pos);
+	return (const void*)((uint8_t*)arr->p+arr->_memsize*pos);
 }
 
 static void
 array_set(array* arr, size_t pos, void* val) {
-	memcpy(arr->p+pos*arr->_memsize, val, arr->_memsize);
+	memcpy((uint8_t*)arr->p+pos*arr->_memsize, val, arr->_memsize);
 }
 
 static void
