@@ -24,15 +24,17 @@ swap(void* a, void* b, size_t size) {
 static void 
 heapify(void* arr, size_t size, size_t index, size_t n, bool (*cmp)(const void*, const void*)) {
 	size_t left=2*index+1, right=left+1; //children
-
+	size_t max_idx = index;
 	if (left<n && cmp(arr+size*index, arr+size*left)) {
-		swap(arr+size*index, arr+size*left, size);
-		heapify(arr, size, left, n, cmp);
+		max_idx = left;
 	}
 
-	if (right<n && cmp(arr+size*index, arr+size*right)) {
-		swap(arr+size*index, arr+size*right, size);
-		heapify(arr, size, right, n, cmp);
+	if (right<n && cmp(arr+size*max_idx, arr+size*right)) {
+		max_idx = right;
+	}
+	if (max_idx != index) {
+		swap(arr+size*index, arr+size*max_idx, size);
+		heapify(arr, size, max_idx, n, cmp);
 	}
 }
 
