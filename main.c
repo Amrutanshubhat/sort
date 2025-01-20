@@ -1,3 +1,4 @@
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,8 +9,14 @@
 int success = 0;
 int fail = 0;
 
-bool cmp(const void* x, const void* y) {
+static bool (*cmp)(const void*, const void*);
+
+bool cmp_default(const void* x, const void* y) {
 	return *(const int*)x < *(const int*)y;
+}
+
+bool cmp_string(const void* x, const void* y) {
+	return strcmp((char*)(((array*)x)->p), (char*)(((array*)y)->p)) <= 0;
 }
 
 bool is_sorted(array* arr) {
@@ -20,7 +27,6 @@ bool is_sorted(array* arr) {
 			return 0;
 		}
 	}
-	printf("\n");
 	return 1;
 }
 
@@ -82,22 +88,64 @@ void test_heapsort(const array* arr) {
 
 }
 
-int main() {
-	FILE* f = fopen("test_data/int_1000.txt", "r");
-	if (f==NULL) {
-		printf("File open failed\n");
-	}
-	int n;
-	array* arr = new_array(sizeof(int));
-	while(fscanf(f, "%d ", &n) == 1) {
-		array_push(arr, &n);
-	}
-	printf("Totoal Array Size: %ld\n", array_size(arr));
-	test_insertion_sort(arr);
+void test_sorts(array* arr, const char* type) {
+	printf("\nTotoal Array Size (%s) : %ld\n\n", type, array_size(arr));
 	test_quicksort(arr);
 	test_mergesort(arr);
 	test_heapsort(arr);
-	array_free(arr);
+	test_insertion_sort(arr);
 	printf("\nSuccess: %d\tFailure: %d\n", success, fail);
+	success=0; fail=0;
+}
+
+
+int main() {
+	FILE* f = fopen("test_data/int_1000.txt", "r");
+	{
+		cmp = cmp_default;
+		int n;
+		array* arr = new_array(sizeof(int));
+		while(fscanf(f, "%d ", &n) == 1) {
+			array_push(arr, &n);
+		}
+		test_sorts(arr, "INT");
+		array_free(arr);
+	}
+	fclose(f);
+	{
+		f = fopen("test_data/float_1000.txt", "r");
+		float n;
+		array* arr = new_array(sizeof(float));
+		while(fscanf(f, "%f ", &n) == 1) {
+			array_push(arr, &n);
+		}
+		test_sorts(arr, "FLOAT");
+		array_free(arr);
+	}
+	fclose(f);
+	{
+		cmp = cmp_string;
+		f = fopen("test_data/shakespeare_string.txt", "r");
+		assert(f!=nullptr);
+		array* string = new_array(sizeof(char));
+		array* arr = new_array(sizeof(*string));
+		char c;
+		while ((c=fgetc(f)) != EOF) {
+			if (isspace(c)) {
+				if (array_size(string) > 0) {
+					array_push(arr, string);
+					string = new_array(sizeof(char));
+				} else {
+					array_clear(string);
+				}
+			} else {
+				array_push(string, &c);
+			}
+		}
+		test_sorts(arr, "STRING");
+		for (size_t i=0; i<arr->n; i++)
+			free(((array *)array_get(arr, i))->p);
+		array_free(arr);
+	}
 	fclose(f);
 }
