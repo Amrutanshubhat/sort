@@ -1,18 +1,20 @@
 #include "sort.h"
 #include <string.h>
 
-void swap(void* arr, size_t size, int x, int y) {
+static void 
+swap(void* arr, size_t size, size_t x, size_t y) {
 	char temp[size];
 	memcpy(temp, arr+x*size, size);
 	memcpy(arr+x*size, arr+y*size, size);
 	memcpy(arr+y*size, temp, size);
 }
 
-void partition(void* arr, size_t size, int l, int r, bool (*cmp)(const void*, const void*)) {
+static void 
+partition(void* arr, size_t size, int l, int r, bool (*cmp)(const void*, const void*)) {
 	if (l >= r) return;
 	swap(arr, size, (l+r)/2, l);
-	int last = l;
-	for (int i=l+1; i<= r; i++) {
+	size_t last = l;
+	for (size_t i=l+1; i<= r; i++) {
 		if (cmp(arr+i*size, arr+l*size)) {
 			swap(arr, size, i, ++last);
 		}
