@@ -39,7 +39,7 @@ array_size(array* arr) {
 	
 static void
 array_push(array *arr, void* val) {
-	if (arr == nullptr) {
+	if (arr == nullptr || val == nullptr) {
 		fprintf(stderr, "Unallocated array passed\n");
 		return;
 	}
@@ -78,8 +78,10 @@ array_free(array* arr) {
 	if (!arr) return;
 	if (arr->capacity) {
 		free(arr->p);
+		arr->p = nullptr;
 	}
 	free(arr);
+	arr = nullptr;
 }
 
 static array*
@@ -88,6 +90,13 @@ array_copy(const array* src) {
 	dest->n = src->n;
 	memcpy(dest->p, src->p, dest->capacity*dest->_memsize);
 	return dest;
+}
+
+static void
+array_clear(array *arr) {
+	if(!arr || arr->n == 0) return;
+	arr->n = 0;
+	memset(arr->p, 0, sizeof(arr->_memsize)*arr->n);
 }
 
 #endif
