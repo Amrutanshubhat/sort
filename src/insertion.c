@@ -23,5 +23,4 @@ void insertion_sort(void* arr, size_t nsize, size_t size, bool (*cmp)(const void
 		}
 		memcpy(arr+size*(j+1), key, size);
 	}
-	printf("\n");
 }
