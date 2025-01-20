@@ -12,5 +12,5 @@
 void insertion_sort(void* arr, size_t nsize, size_t size, bool (*cmp)(const void*, const void*));
 void quick_sort(void* arr, size_t nsize, size_t size, bool (*cmp)(const void*, const void*));
 void merge_sort(void* arr, size_t nsize, size_t size, bool (*cmp)(const void*, const void*));
-
+void heapsort(void* arr, size_t nsize, size_t size, bool (*cmp)(const void*, const void*));
 #endif

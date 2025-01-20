@@ -70,6 +70,18 @@ void test_mergesort(const array* arr) {
 
 }
 
+void test_heapsort(const array* arr) {
+	array* temp_arr = array_copy(arr);
+
+	clock_t start = clock();
+	heapsort(temp_arr->p, temp_arr->_memsize*temp_arr->n,  temp_arr->_memsize, cmp);
+	clock_t end = clock();
+
+	print_result(end-start, is_sorted(temp_arr), "HEAP SORT");
+	array_free(temp_arr);
+
+}
+
 int main() {
 	FILE* f = fopen("test_data/int_1000.txt", "r");
 	if (f==NULL) {
@@ -84,6 +96,7 @@ int main() {
 	test_insertion_sort(arr);
 	test_quicksort(arr);
 	test_mergesort(arr);
+	test_heapsort(arr);
 	array_free(arr);
 	printf("\nSuccess: %d\tFailure: %d\n", success, fail);
 	fclose(f);
