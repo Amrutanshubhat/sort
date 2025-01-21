@@ -16,7 +16,7 @@ bool cmp_default(const void* x, const void* y) {
 }
 
 bool cmp_string(const void* x, const void* y) {
-	return strcmp((char*)(((array*)x)->p), (char*)(((array*)y)->p)) <= 0;
+	return strcmp(*(const char**)x, *(const char**)y) <= 0;
 }
 
 bool is_sorted(array* arr) {
@@ -128,14 +128,14 @@ int main() {
 		f = fopen("test_data/shakespeare_string.txt", "r");
 		assert(f!=nullptr);
 		array* string = new_array(sizeof(char));
-		array* arr = new_array(sizeof(*string));
+		array* arr = new_array(sizeof(char*));
 		char c;
 		while ((c=fgetc(f)) != EOF) {
 			if (isspace(c)) {
 				if (array_size(string) > 0) {
-					array_push(arr, string);
-					string = new_array(sizeof(char));
-				} else {
+					char* temp = (char *) malloc(string->_memsize*(string->n+1));
+					strcpy(temp, string->p+1); //copy terminator as well
+					array_push(arr, &temp);
 					array_clear(string);
 				}
 			} else {
@@ -143,8 +143,10 @@ int main() {
 			}
 		}
 		test_sorts(arr, "STRING");
-		for (size_t i=0; i<arr->n; i++)
-			free(((array *)array_get(arr, i))->p);
+		for (size_t i=0; i<arr->n; i++) {
+			free(*(char**)array_get(arr, i));
+		}
+		array_free(string);
 		array_free(arr);
 	}
 	fclose(f);

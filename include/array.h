@@ -20,12 +20,13 @@ typedef struct {
 #define _CREATE_ARRAY(arg1, arg2, ...) \
 	_create_array(arg1, arg2)
 
+// Note: Always allocate 1 extra byte in case of string
 static array*
 _create_array(size_t size, size_t cnt) {
 	array* arr = (array*) malloc(sizeof(*arr));
 	if (!arr) exit(69);
 	arr->n = cnt;
-	arr->capacity = cnt == 0 ? 256 : cnt;
+	arr->capacity = cnt == 0 ? 256 : cnt+1;
 	arr->_memsize = size;
 	arr->p = (void*) calloc(arr->capacity, arr->_memsize);
 	assert(arr->p != nullptr);
@@ -37,13 +38,14 @@ array_size(array* arr) {
 	return arr->n;
 }
 	
+// takes address of value to be pushed
 static void
 array_push(array *arr, void* val) {
 	if (arr == nullptr || val == nullptr) {
 		fprintf(stderr, "Unallocated array passed\n");
 		return;
 	}
-	if (arr->capacity == arr->n){
+	if (arr->capacity == arr->n+1){
 		arr->capacity *= 2;
 		arr->p = (void*)realloc(arr->p, arr->capacity*arr->_memsize);
 		if (!arr->p) {
@@ -54,6 +56,7 @@ array_push(array *arr, void* val) {
 	arr->n++; 
 }
 
+// returns popped value's address
 static const void* 
 array_pop(array* arr) {
 	if (arr->n > 0) { 
@@ -63,6 +66,7 @@ array_pop(array* arr) {
 	return nullptr;
 }
 
+// address of values at pos
 static const void*
 array_get(const array* arr, size_t pos) {
 	return (const void*)((uint8_t*)arr->p+arr->_memsize*pos);
@@ -88,15 +92,15 @@ static array*
 array_copy(const array* src) {
 	array* dest = new_array(src->_memsize, src->capacity);
 	dest->n = src->n;
-	memcpy(dest->p, src->p, dest->capacity*dest->_memsize);
+	memmove(dest->p, src->p, dest->n*dest->_memsize);
 	return dest;
 }
 
 static void
 array_clear(array *arr) {
 	if(!arr || arr->n == 0) return;
-	arr->n = 0;
 	memset(arr->p, 0, sizeof(arr->_memsize)*arr->n);
+	arr->n = 0;
 }
 
 #endif
